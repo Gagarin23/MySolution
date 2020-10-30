@@ -14,6 +14,12 @@ namespace MyProject
     {
         private string _elementName;
         private Func<string, T> _getModelObjectFunc;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elementName">Имя искомого поля в xml.</param>
+        /// <param name="getModelObjectFunc">Метод возврата объекта.</param>
         public TestReader(string elementName, Func<string, T> getModelObjectFunc)
         {
             _elementName = elementName;

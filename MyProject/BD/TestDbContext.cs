@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyProject.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace MyProject.BD
             Database.EnsureCreated();
         }
 
+        public DbSet<Shop> Shop { get; set; }
+        public DbSet<Offer> Offer { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\MSSQLLocalDB;Database=PrintStationSQL;Trusted_Connection=True;");
+                @"Server=(localdb)\MSSQLLocalDB;Database=TestDataBase;Trusted_Connection=True;");
         }
     }
 }
