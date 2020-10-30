@@ -9,8 +9,7 @@ using System.Xml;
 
 namespace MyProject
 {
-    class TestReader<T>
-        where T : class 
+    class TestReader<T> : ITestReader<T> where T : class 
     {
         private string _elementName;
         private Func<string, T> _getModelObjectFunc;

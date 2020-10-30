@@ -12,13 +12,13 @@ namespace MyProject
 {
     class Program
     {
+        private static string _url = @"http://static.ozone.ru/multimedia/yml/facet/div_soft.xml";
+        private static string _searchElement = "offers";
         static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            string url = @"http://static.ozone.ru/multimedia/yml/facet/div_soft.xml";
-            var reader = new TestReader<Offers>("offers", LoadXml);
-            var offers = reader.GetModelObject(url);
+            var offers = GetOffers(new TestReader<Offers>(_searchElement, LoadXml));
 
             DbHandler.SaveOffer(offers.OfferList, 1);
 
@@ -30,6 +30,11 @@ namespace MyProject
             WriteToConsole(offer);
 
             Console.ReadLine();
+        }
+
+        public static Offers GetOffers(ITestReader<Offers> testReader)
+        {
+            return testReader.GetModelObject(_url);
         }
 
         public static Offers LoadXml(string xml)
