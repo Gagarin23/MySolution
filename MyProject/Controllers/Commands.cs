@@ -3,7 +3,6 @@ using MyProject.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,25 +11,40 @@ namespace MyProject.Controllers
     class Commands
     {
         private const string searchOffers = "offers";
-        public void SaveOffers(string shopId, string url)
+        public bool DebbugFlagOfEndingAsyncMethod { get; set; }
+
+        public async void SaveOffersAsync(string shopId, string url)
         {
             var cancelSrc = new CancellationTokenSource();
             var token = cancelSrc.Token;
-            Task.Run(() => SaveOffers(shopId, url, cancelSrc), token);
+            await Task.Run(() => SaveOffers(shopId, url, cancelSrc), token);
         }
+
         public void Print(string shopId)
         {
-            var shop = new Shop() 
-            { 
+            var shop = new Shop()
+            {
                 ShopId = shopId
             };
 
-            using(var db = new TestDbContext())
+            using (var db = new TestDbContext())
             {
-                shop.Offers = db.Offer.Where(offer => offer.ShopId == shop.ShopId).ToArray();
+                Offer offer;
+                AvailabilityInShop availability;
+                var tempIds = db.Availability.Where(av => av.ShopId == shop.ShopId).Select(av => av.OfferId).ToArray();
+                var offersInCurrentShop = new List<Offer>();
+
+                Console.WriteLine("Первые десять товаров из магазина в виде csv:");
+                Console.WriteLine();
+                Console.WriteLine("{0};{1};{2}", nameof(offer.OfferId), nameof(offer.Name), nameof(availability.ShopId));
+                for (int i = 0; i < 10; i++)
+                {
+                    offer = db.Offers.Find(tempIds[i]);
+                    Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
+                }
             }
 
-            WriteToConsoleLikeCsv(shop.Offers);
+
         }
 
         private void SaveOffers(string shopId, string url, CancellationTokenSource cancelSrc)
@@ -40,25 +54,14 @@ namespace MyProject.Controllers
                 var offers = new OffersGetter(url, searchOffers).Offers?.OfferList;
                 var dbHandler = new DbHandler();
                 var shop = dbHandler.SetShop(shopId);
-                dbHandler.AddOffers(offers, shop);
+                dbHandler.AddOffers(offers);
+                dbHandler.AddOffersToShop(offers, shop);
+                DebbugFlagOfEndingAsyncMethod = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 cancelSrc.Cancel();
-            }
-        }
-        private void WriteToConsoleLikeCsv(params Offer[] offers)
-        {
-            foreach (var offer in offers)
-            {
-                var shopId = offer?.ShopId;
-                if (shopId != null)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("{0};{1};{2}", nameof(offer.OfferId), nameof(offer.Name), nameof(offer.ShopId));
-                    Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
-                }
             }
         }
     }

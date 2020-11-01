@@ -1,20 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyProject;
 using MyProject.BD;
-using MyProject.Controllers;
-using MyProject.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace MyProject.Tests
 {
     [TestClass()]
-    public class MyControllerTests
+    public class XmlReaderTest
     {
         [TestMethod()]
         public void GetOffersTest()

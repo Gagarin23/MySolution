@@ -2,10 +2,7 @@
 using MyProject.Model;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyProject.BD
 {
@@ -17,15 +14,18 @@ namespace MyProject.BD
             {
                 using (var db = new TestDbContext())
                 {
-                    var foundedShop = db.Shop.Find(shopId);
+                    Console.WriteLine("Поиск магазина в базе данных...");
+                    var foundedShop = db.Shops.Find(shopId);
                     if (foundedShop == null)
                     {
+                        Console.WriteLine("Магазин не найден, запись в базу данных...");
                         var shop = new Shop() { ShopId = shopId };
-                        db.Shop.Add(shop);
+                        db.Shops.Add(shop);
                         db.SaveChanges();
                         return shop;
                     }
 
+                    Console.WriteLine("Магазин найден в базе данных.");
                     return foundedShop;
                 }
             }
@@ -36,40 +36,76 @@ namespace MyProject.BD
             }
         }
 
-        public void AddOffers(List<Offer> offers, Shop shop)
+        public void AddOffers(List<Offer> offers)
         {
             try
             {
-                Console.WriteLine("Запись в базу данных...");
+                Console.WriteLine("Запись продуктов в базу данных...");
                 using (var db = new TestDbContext())
                 {
                     db.Database.OpenConnection();
-                    db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offer ON;");
+                    db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers ON;");
                     int i = 0;
                     for (i = 0; i < offers.Count; i++) //Для больших коллекций стараюсь использовать for вместо foreach
-                                                 //т.к. обращение по индексу быстрее, чем вызов метода MoveNext().
-                                                 //Вызов метода предполагает установку флага возврата из вызваемого метода,
-                                                 //а это дополнительные накладные расходы.
+                                                       //т.к. обращение по индексу быстрее, чем вызов метода MoveNext().
+                                                       //Вызов метода предполагает установку флага возврата из вызваемого метода,
+                                                       //а это дополнительные накладные расходы.
                     {
-                        offers[i].Shop = shop;
-                        var foundedOffer = db.Offer.Find(offers[i].OfferId);
+                        var foundedOffer = db.Offers.Find(offers[i].OfferId);
 
                         if (foundedOffer == null)
                         {
-                            db.Offer.Add(offers[i]);
+                            db.Offers.Add(offers[i]);
                         }
                         else
                         {
-                            db.Offer.Update(foundedOffer);
+                            db.Offers.Update(foundedOffer);
                         }
+
                     }
-                    db.Shop.Update(shop);
-                    
+
                     Console.WriteLine("Сохранение базы...");
                     db.SaveChanges();
-                    db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offer OFF;");
+                    db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers OFF;");
                     Console.WriteLine("База обновлена.");
-                    Console.WriteLine("Записей добавлено: {0}", i);
+                    Console.WriteLine("Записей продуктов добавлено: {0}", i);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public void AddOffersToShop(List<Offer> offers, Shop shop)
+        {
+            try
+            {
+                Console.WriteLine("Запись продуктов в магазин...");
+                using (var db = new TestDbContext())
+                {
+                    int i = 0;
+                    for (i = 0; i < offers.Count; i++)
+                    {
+                        var foundedOfferInShop = db.Availability.Where(av => av.ShopId == shop.ShopId)
+                            .FirstOrDefault(av => av.OfferId == offers[i].OfferId);
+
+                        if (foundedOfferInShop == null)
+                        {
+                            db.Availability.Add(new AvailabilityInShop() { Offer = offers[i], Shop = shop });
+                        }
+                        else
+                        {
+                            db.Availability.Update(foundedOfferInShop);
+                        }
+                        db.Offers.Update(offers[i]);
+                    }
+                    db.Shops.Update(shop);
+
+                    Console.WriteLine("Сохранение базы...");
+                    db.SaveChanges();
+                    Console.WriteLine("База обновлена.");
+                    Console.WriteLine("Записей продуктов добавлено: {0}", i);
                 }
             }
             catch (Exception e)

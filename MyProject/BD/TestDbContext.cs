@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyProject.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyProject.BD
 {
@@ -15,8 +10,9 @@ namespace MyProject.BD
             Database.EnsureCreated();
         }
 
-        public DbSet<Shop> Shop { get; set; }
-        public DbSet<Offer> Offer { get; set; }
+        public DbSet<Shop> Shops { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<AvailabilityInShop> Availability { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

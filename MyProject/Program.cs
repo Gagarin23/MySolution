@@ -1,14 +1,8 @@
-﻿using MyProject.BD;
-using MyProject.Controllers;
-using MyProject.Model;
+﻿using MyProject.Controllers;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
+using System.Threading;
 
 [assembly: InternalsVisibleTo("MyProjectTests")]
 namespace MyProject
@@ -20,26 +14,28 @@ namespace MyProject
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var cmd = new Commands();
-            
+
             if (args.Length > 0)
             {
-                cmd = new Commands();
-                switch (args[0])
-                {
-                    case "save":
-                        cmd.SaveOffers("ozon", url);
-                        break;
-                }
+                Console.WriteLine(args[1]);
+
+                if (args[0].Equals("save"))
+                    cmd.SaveOffersAsync(args[1], args[2]);
+
+                else if (args[0].Equals("print"))
+                    cmd.Print(args[1]);
             }
-            else
+            else //Debug
             {
-                //Debug
-                cmd.SaveOffers("test", url);
-                Console.WriteLine();
-                Console.ReadLine();
-                cmd.Print("test");
+                cmd.SaveOffersAsync("test", url);
+                while (!cmd.DebbugFlagOfEndingAsyncMethod) Thread.Sleep(1000);
+                cmd.DebbugFlagOfEndingAsyncMethod = false;
+                cmd.SaveOffersAsync("test2", url);
+                while (!cmd.DebbugFlagOfEndingAsyncMethod) Thread.Sleep(1000);
+                cmd.Print("test2");
             }
 
+            Console.WriteLine("готово.");
             Console.ReadLine();
         }
     }

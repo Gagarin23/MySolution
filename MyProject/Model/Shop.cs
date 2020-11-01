@@ -1,10 +1,5 @@
-﻿using MyProject.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyProject
 {
@@ -12,10 +7,10 @@ namespace MyProject
     {
         private string shopId;
         [Key]
-        public string ShopId 
+        public string ShopId
         {
             get => shopId;
-            set 
+            set
             {
                 if (value.Length < 50) //Добавить бы ещё валидацию на корректность символов, но это отдельная тема.
                     shopId = value;
@@ -26,8 +21,6 @@ namespace MyProject
                 }
             }
         }
-
-        public Offer[] Offers { get; set; }
 
         public override string ToString()
         {
