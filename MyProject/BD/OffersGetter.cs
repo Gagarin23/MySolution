@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace MyProject.Controllers
+namespace MyProject.BD
 {
     /// <summary>
     /// Получить offers из xml документа.
     /// </summary>
-    class OffersGetter : XmlReader<SurrogateOffers> //Простоечный класс с наследованием, по моему мнению, нужен для того,
-                                           //чтобы в дальнейшем избежать проблем, если у класса предка изменится сигнатура.
+    class OffersGetter : XmlReader<SurrogateOffers>, IDisposable //Простоечный класс с наследованием, по моему мнению, нужен для того,
+                                                                 //чтобы в дальнейшем избежать проблем, если у класса предка изменится сигнатура.
     {
         private SurrogateOffers _offers;
         public SurrogateOffers Offers
@@ -45,6 +45,11 @@ namespace MyProject.Controllers
             {
                 return (SurrogateOffers)serializer.Deserialize(ms); // Запаковка в object при возврате крайне не радует :(
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose();
         }
     }
 }

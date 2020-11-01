@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -22,26 +23,19 @@ namespace MyProject
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 Async = true,
-                DtdProcessing = DtdProcessing.Parse
+                DtdProcessing = DtdProcessing.Parse,
+                ValidationType = ValidationType.Schema
             };
 
-            try
+            using (XmlReader reader = XmlReader.Create(address, settings))
             {
-                using (XmlReader reader = XmlReader.Create(address, settings))
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.NodeType == XmlNodeType.Element && reader.Name == elementName)
                     {
-                        if (reader.NodeType == XmlNodeType.Element && reader.Name == elementName)
-                        {
-                            return getModelObjectFunc(reader.ReadOuterXml());
-                        }
+                        return getModelObjectFunc(reader.ReadOuterXml());
                     }
-                    return null;
                 }
-            }
-            catch(Exception e)
-            {
-                Exception = e;
                 return null;
             }
         }

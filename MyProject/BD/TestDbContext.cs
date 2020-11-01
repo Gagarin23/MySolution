@@ -12,7 +12,6 @@ namespace MyProject.BD
     {
         public TestDbContext()
         {
-            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 

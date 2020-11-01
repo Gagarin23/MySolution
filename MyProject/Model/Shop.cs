@@ -10,14 +10,14 @@ namespace MyProject
 {
     public class Shop
     {
-        [Key]
         private string shopId;
+        [Key]
         public string ShopId 
         {
             get => shopId;
-            set
+            set 
             {
-                if (value.Length < 50)
+                if (value.Length < 50) //Добавить бы ещё валидацию на корректность символов, но это отдельная тема.
                     shopId = value;
 
                 else
@@ -26,7 +26,8 @@ namespace MyProject
                 }
             }
         }
-        public List<Offer> Offers { get; set; }
+
+        public Offer[] Offers { get; set; }
 
         public override string ToString()
         {

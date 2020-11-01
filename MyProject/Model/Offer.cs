@@ -33,37 +33,32 @@ namespace MyProject.Model
                 }
 
                 else
-                    Console.WriteLine("Id объекта не может быть меньше 1.");
+                    Console.WriteLine("Id объекта не может быть меньше 1. Значение было {0}", value);
             }
         }
 
         [XmlElement("name")]
         public string Name { get; set; }
-        private List<string> shopsId;
-        private List<Shop> shops;
 
-        public void AddShop(Shop shop)
-        {
-            if (shopsId == null)
-            {
-                shopsId = new List<string>() { shop.ShopId };
-                shops = new List<Shop>() { shop };
-            }
-            else if (shopsId.Contains(shop.ShopId))
-            {
-                Console.WriteLine("Товар с id {0} уже привязан к магазину {1}", OfferId, shops);
-            }
+        public string ShopId { get; set; }
 
-            if (!shopsId.Contains(shop.ShopId))
+        private Shop shop;
+        public Shop Shop 
+        { 
+            get => shop; 
+            set
             {
-                shopsId.Add(shop.ShopId);
-                shops.Add(shop);
-            }
-
+                if (shop != null)
+                {
+                    Console.WriteLine("Товар с id {0} уже привязан к магазину {1}", OfferId, Shop);
+                }
+                else
+                {
+                    shop = value;
+                    ShopId = value.ShopId;
+                }
+            } 
         }
-
-        public List<string> GetShopsId() => shopsId;
-        public List<Shop> GetShops() => shops;
 
         public override string ToString()
         {
