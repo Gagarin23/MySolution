@@ -17,8 +17,6 @@ namespace MyProject
 
             if (args.Length > 0)
             {
-                Console.WriteLine(args[1]);
-
                 if (args[0].Equals("save"))
                     cmd.SaveOffersAsync(args[1], args[2]);
 
@@ -35,7 +33,6 @@ namespace MyProject
                 cmd.Print("test2");
             }
 
-            Console.WriteLine("готово.");
             Console.ReadLine();
         }
     }
