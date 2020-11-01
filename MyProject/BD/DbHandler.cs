@@ -128,5 +128,20 @@ namespace MyProject.BD
                 Console.WriteLine(e.Message);
             }
         }
+
+        /// <summary>
+        /// Метод для юнит теста.
+        /// </summary>
+        /// <param name="offer"></param>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        public void TestDbHandler(Offer offer, string shopId)
+        {
+            var shop = SetShop(shopId);
+            var list = new List<Offer>() { offer };
+            AddOffers(list);
+            AddOffersToShop(list, shop);
+            
+        }
     }
 }
