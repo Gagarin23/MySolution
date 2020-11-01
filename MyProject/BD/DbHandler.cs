@@ -8,6 +8,11 @@ namespace MyProject.BD
 {
     class DbHandler
     {
+        /// <summary>
+        /// Установить магазин для работы с ним в БД.
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
         public Shop SetShop(string shopId)
         {
             try
@@ -36,6 +41,10 @@ namespace MyProject.BD
             }
         }
 
+        /// <summary>
+        /// Запись товаров в БД.
+        /// </summary>
+        /// <param name="offers"></param>
         public void AddOffers(List<Offer> offers)
         {
             try
@@ -46,10 +55,11 @@ namespace MyProject.BD
                     db.Database.OpenConnection();
                     db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers ON;");
                     int i = 0;
-                    for (i = 0; i < offers.Count; i++) //Для больших коллекций стараюсь использовать for вместо foreach
-                                                       //т.к. обращение по индексу быстрее, чем вызов метода MoveNext().
-                                                       //Вызов метода предполагает установку флага возврата из вызваемого метода,
-                                                       //а это дополнительные накладные расходы.
+                    for (i = 0; i < offers.Count; i++) 
+                        //Для больших коллекций стараюсь использовать for вместо foreach
+                        //т.к. обращение по индексу быстрее, чем вызов метода MoveNext().
+                        //Вызов метода предполагает установку флага возврата из вызваемого метода,
+                        //а это дополнительные накладные расходы.
                     {
                         var foundedOffer = db.Offers.Find(offers[i].OfferId);
 
@@ -77,6 +87,11 @@ namespace MyProject.BD
             }
         }
 
+        /// <summary>
+        /// Запись товаров в магазин.
+        /// </summary>
+        /// <param name="offers"></param>
+        /// <param name="shop"></param>
         public void AddOffersToShop(List<Offer> offers, Shop shop)
         {
             try
@@ -111,40 +126,6 @@ namespace MyProject.BD
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-            }
-        }
-
-        public T GetDbObject<T>(Func<TestDbContext, int, T> getDbObject, int id)
-            where T : class
-        {
-            try
-            {
-                using (var db = new TestDbContext())
-                {
-                    return getDbObject(db, id);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
-            }
-        }
-
-        public T[] GetDbObject<T>(Func<TestDbContext, T[]> getDbObjects)
-            where T : class
-        {
-            try
-            {
-                using (var db = new TestDbContext())
-                {
-                    return getDbObjects(db);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return null;
             }
         }
     }

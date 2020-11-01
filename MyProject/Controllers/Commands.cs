@@ -13,6 +13,11 @@ namespace MyProject.Controllers
         private const string searchOffers = "offers";
         public bool DebbugFlagOfEndingAsyncMethod { get; set; }
 
+        /// <summary>
+        /// Асинхронный метод сохранения товаров в БД.
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <param name="url"></param>
         public async void SaveOffersAsync(string shopId, string url)
         {
             var cancelSrc = new CancellationTokenSource();
@@ -20,6 +25,10 @@ namespace MyProject.Controllers
             await Task.Run(() => SaveOffers(shopId, url, cancelSrc), token);
         }
 
+        /// <summary>
+        /// Вывод в консоль товаров, находящихся в магазине.
+        /// </summary>
+        /// <param name="shopId"></param>
         public void Print(string shopId)
         {
             var shop = new Shop()
@@ -47,7 +56,16 @@ namespace MyProject.Controllers
 
         }
 
+        /// <summary>
+        /// Сохранение товаров в БД.
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <param name="url"></param>
+        /// <param name="cancelSrc"></param>
         private void SaveOffers(string shopId, string url, CancellationTokenSource cancelSrc)
+            // Осознанно нарушен принцип единой ответственности, т.к. того требовало задание,
+            // а именно для реализации отношения многие ко многим, запись товаров и наличия товара в магазине
+            // требовало различных методов и по сути разных команд. Тут всё хапихано в "save".
         {
             try
             {
