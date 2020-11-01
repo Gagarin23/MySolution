@@ -12,7 +12,7 @@ namespace MyProject.Model
     /// Сурогатный класс для чтения предоставленной xml.
     /// </summary>
     [XmlRoot("offers")]
-    public class Offers
+    public class SurrogateOffers
     {
         [XmlElement("offer")]
         public List<Offer> OfferList { get; set; }

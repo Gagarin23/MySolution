@@ -11,7 +11,26 @@ namespace MyProject
     public class Shop
     {
         [Key]
-        public int ShopId { get; set; }
+        private string shopId;
+        public string ShopId 
+        {
+            get => shopId;
+            set
+            {
+                if (value.Length < 50)
+                    shopId = value;
+
+                else
+                {
+                    Console.WriteLine("Id магазина не должно превышать 49 символов.");
+                }
+            }
+        }
         public List<Offer> Offers { get; set; }
+
+        public override string ToString()
+        {
+            return shopId;
+        }
     }
 }

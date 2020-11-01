@@ -1,56 +1,84 @@
 ﻿using MyProject.BD;
+using MyProject.Controllers;
 using MyProject.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
+[assembly: InternalsVisibleTo("MyProjectTests")]
 namespace MyProject
 {
     class Program
     {
         private static string _url = @"http://static.ozone.ru/multimedia/yml/facet/div_soft.xml";
         private static string _searchElement = "offers";
+        private static string _shopId = "qqqqqqqqqqqqqqqqqqqqqqqqqqqqq";
         static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            var offers = GetOffers(new TestReader<Offers>(_searchElement, LoadXml));
+            DeleteDb();
 
-            DbHandler.SaveOffer(offers.OfferList, 1);
+            var offers = new OffersGetter(_url, _searchElement).Offers.OfferList;
 
-            var ids = offers.OfferList.Select(offer => offer.OfferId).ToArray();
+            var dbHandler = new DbHandler();
+            dbHandler.AddOffers(offers, _shopId);
+
+            var ids = offers.Select(offer => offer.OfferId).ToArray();
             var rnd = new Random();
             var randomId = ids[rnd.Next(0, ids.Length - 1)];
-            var offer = DbHandler.ReadOffers(randomId);
+            var offer = dbHandler.GetDbObject(GetOffer, randomId);
 
-            WriteToConsole(offer);
+            //WriteToConsole(offer);
 
             Console.ReadLine();
         }
 
-        public static Offers GetOffers(ITestReader<Offers> testReader)
+        static void DeleteDb()
         {
-            return testReader.GetModelObject(_url);
+            using(var db = new TestDbContext())
+            {
+                var allOffers = db.Offer.Select(offer => offer);
+                db.RemoveRange(allOffers);
+                db.SaveChanges();
+            }
         }
 
-        public static Offers LoadXml(string xml)
+        public static Offer GetOffer(TestDbContext db, int id)
         {
-            var serializer = new XmlSerializer(typeof(Offers));
+            return db.Offer.Find(id);
+        }
+
+        public static SurrogateOffers LoadOffers(string xml)
+        {
+            var serializer = new XmlSerializer(typeof(SurrogateOffers));
 
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
             {
-                return (Offers)serializer.Deserialize(ms); // Запаковка в object при возврате крайне не радует :(
+                return (SurrogateOffers)serializer.Deserialize(ms); // Запаковка в object при возврате крайне не радует :(
             }
         }
 
         public static void WriteToConsole(Offer offer)
         {
-            Console.WriteLine("{0};{1};{2}", nameof(offer.OfferId), nameof(offer.Name), nameof(offer.ShopId));
-            Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name.Substring(0, 50), offer.ShopId);
+            var ids = offer?.GetShopsId();
+            if (offer != null && ids != null)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Случайный объект из базы в формате csv:");
+                Console.WriteLine("OfferId;Name;ShopsId");
+                var sb = new StringBuilder();
+                foreach(var id in ids)
+                {
+                    sb.Append(id + " ");
+                }
+                Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, sb.ToString());
+            }
         }
     }
 }
