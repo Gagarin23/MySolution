@@ -41,7 +41,8 @@ namespace MyProject.Controllers
                 Offer offer;
                 AvailabilityInShop availability;
                 var tempIds = db.Availability.Where(av => av.ShopId == shop.ShopId).Select(av => av.OfferId).ToArray();
-                var offersInCurrentShop = new List<Offer>();
+                // Хотелось бы реализовать выборку из db.Offers по коллекции айдишников,
+                // Но ничего лучше чем перебор не придумал.
 
                 Console.WriteLine("Первые десять товаров из магазина в виде csv:");
                 Console.WriteLine();
