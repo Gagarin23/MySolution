@@ -95,7 +95,7 @@ namespace MyProject.BD
                     db.SaveChanges();
                     db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers OFF;");
                     Console.WriteLine("База обновлена.");
-                    Console.WriteLine("Записей продуктов добавлено: {0}", i);
+                    Console.WriteLine("Записей обработано: {0}", i);
                 }
             }
             catch (Exception e)
@@ -137,7 +137,7 @@ namespace MyProject.BD
                     Console.WriteLine("Сохранение базы...");
                     db.SaveChanges();
                     Console.WriteLine("База обновлена.");
-                    Console.WriteLine("Записей продуктов добавлено: {0}", i);
+                    Console.WriteLine("Записей обработано: {0}", i);
                 }
             }
             catch (Exception e)
