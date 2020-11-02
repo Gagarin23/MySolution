@@ -23,6 +23,8 @@ namespace MyProject.Controllers
             var cancelSrc = new CancellationTokenSource();
             var token = cancelSrc.Token;
             await Task.Run(() => SaveOffers(shopId, url, cancelSrc), token);
+                //просто для примера показал синтаксис. Ну и в рабочем приложении
+                // я бы запускал запись/чтение в отдельном потоке дабы не вешать вьюшку.
         }
 
         /// <summary>
