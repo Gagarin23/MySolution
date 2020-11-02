@@ -65,7 +65,7 @@ namespace MyProject.BD
 
                         //var foundedOffers = db.Offers.Intersect(offers);
 
-                        //if(foundedOffers != null)
+                        //if(foundedOffers.Length > 0)
                         //{
                         //    var elementOtAdd = foundedOffers.Except(offers);
                         //    db.Offers.AddRange(elementOtAdd);
