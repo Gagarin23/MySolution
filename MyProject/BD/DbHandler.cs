@@ -15,23 +15,24 @@ namespace MyProject.BD
         /// <returns></returns>
         public Shop SetShop(string shopId)
         {
+            Console.WriteLine();
             if (shopId == null)
                 throw new NullReferenceException("Название магазина не может быть пустым!");
 
             using (var db = new TestDbContext())
             {
-                Console.WriteLine("Поиск магазина в базе данных...");
+                Console.WriteLine($"Поиск магазина \"{shopId}\" в базе...");
                 var foundedShop = db.Shops.Find(shopId);
                 if (foundedShop == null)
                 {
-                    Console.WriteLine("Магазин не найден, запись в базу данных...");
+                    Console.WriteLine("Магазин не найден, запись в базу...");
                     var shop = new Shop() { ShopId = shopId };
                     db.Shops.Add(shop);
                     db.SaveChanges();
                     return shop;
                 }
 
-                Console.WriteLine("Магазин найден в базе данных.");
+                Console.WriteLine($"Магазин \"{shopId}\" найден в базе.");
                 return foundedShop;
             }
         }
@@ -42,12 +43,13 @@ namespace MyProject.BD
         /// <param name="offers"></param>
         public void AddOffers(IList<Offer> offers)
         {
+            Console.WriteLine();
             if (offers == null || offers.Count == 0)
                 throw new NullReferenceException("Список товаров не может быть пустым.");
 
             try
             {
-                Console.WriteLine("Запись продуктов в базу данных...");
+                Console.WriteLine("Запись продуктов в базу...");
                 using (var db = new TestDbContext())
                 {
                     db.Database.OpenConnection();
@@ -92,8 +94,6 @@ namespace MyProject.BD
                     Console.WriteLine("Сохранение базы...");
                     db.SaveChanges();
                     db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers OFF;");
-                    Console.WriteLine("База обновлена.");
-                    Console.WriteLine("Записей обработано: {0}", i);
                 }
             }
             catch (Exception e)
@@ -109,12 +109,13 @@ namespace MyProject.BD
         /// <param name="shop"></param>
         public void AddOffersToShop(IList<Offer> offers, Shop shop)
         {
+            Console.WriteLine();
             if (offers == null || offers.Count == 0 || shop == null)
                 throw new NullReferenceException("Список товаров не может быть пустым.");
 
             try
             {
-                Console.WriteLine("Запись продуктов в магазин...");
+                Console.WriteLine($"Запись продуктов в магазин \"{shop.ShopId}\"...");
                 using (var db = new TestDbContext())
                 {
                     int i = 0;
@@ -137,8 +138,6 @@ namespace MyProject.BD
 
                     Console.WriteLine("Сохранение базы...");
                     db.SaveChanges();
-                    Console.WriteLine("База обновлена.");
-                    Console.WriteLine("Записей обработано: {0}", i);
                 }
             }
             catch (Exception e)

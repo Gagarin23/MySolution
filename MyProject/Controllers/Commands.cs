@@ -40,6 +40,7 @@ namespace MyProject.Controllers
 
             using (var db = new TestDbContext())
             {
+                Console.WriteLine();
                 Offer offer;
                 AvailabilityInShop availability;
                 var tempIds = db.Availability.Where(av => av.ShopId == shop.ShopId).Select(av => av.OfferId).ToArray();
@@ -47,7 +48,6 @@ namespace MyProject.Controllers
                 // Но ничего лучше чем перебор не придумал.
 
                 Console.WriteLine("Первые десять товаров из магазина в виде csv:");
-                Console.WriteLine();
                 Console.WriteLine("{0};{1};{2}", nameof(offer.OfferId), nameof(offer.Name), nameof(availability.ShopId));
                 for (int i = 0; i < 10; i++)
                 {
