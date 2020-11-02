@@ -63,6 +63,23 @@ namespace MyProject.BD
                     {
                         var foundedOffer = db.Offers.Find(offers[i].OfferId);
 
+                        //var foundedOffers = db.Offers.Intersect(offers);
+
+                        //if(foundedOffers != null)
+                        //{
+                        //    var elementOtAdd = foundedOffers.Except(offers);
+                        //    db.Offers.AddRange(elementOtAdd);
+                        //}
+                        //else
+                        //{
+                        //    db.Offers.AddRange(offers);
+                        //}
+                        // Закомменчиный код выше я хотел использовать чтобы не прибегать к циклам,
+                        // но в момент расчёта .Intersect(offers) вылетает исключение.
+                        // Гугл говорит, что не удаётся преобразовать .Intersect(offers) в запрос sql.
+                        // Как вариант я мог бы загрузить всю DbSet в память,
+                        // но как по мне это слишком затратно по ресурсам.
+
                         if (foundedOffer == null)
                         {
                             db.Offers.Add(offers[i]);
