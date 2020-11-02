@@ -45,7 +45,7 @@ namespace MyProject.BD
         /// Запись товаров в БД.
         /// </summary>
         /// <param name="offers"></param>
-        public void AddOffers(List<Offer> offers)
+        public void AddOffers(IList<Offer> offers)
         {
             try
             {
@@ -57,8 +57,8 @@ namespace MyProject.BD
                     int i = 0;
                     for (i = 0; i < offers.Count; i++) 
                         //Для больших коллекций стараюсь использовать for вместо foreach
-                        //т.к. обращение по индексу быстрее, чем вызов метода MoveNext().
-                        //Вызов метода предполагает установку флага возврата из вызваемого метода,
+                        //т.к. обращение по индексу быстрее, чем вызов метода MoveNext() в foreach.
+                        //Вызов метода предполагает в стеке установку флага возврата из вызваемого метода,
                         //а это дополнительные накладные расходы.
                     {
                         var foundedOffer = db.Offers.Find(offers[i].OfferId);
@@ -92,7 +92,7 @@ namespace MyProject.BD
         /// </summary>
         /// <param name="offers"></param>
         /// <param name="shop"></param>
-        public void AddOffersToShop(List<Offer> offers, Shop shop)
+        public void AddOffersToShop(IList<Offer> offers, Shop shop)
         {
             try
             {
