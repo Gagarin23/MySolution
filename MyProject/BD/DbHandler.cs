@@ -15,29 +15,24 @@ namespace MyProject.BD
         /// <returns></returns>
         public Shop SetShop(string shopId)
         {
-            try
-            {
-                using (var db = new TestDbContext())
-                {
-                    Console.WriteLine("Поиск магазина в базе данных...");
-                    var foundedShop = db.Shops.Find(shopId);
-                    if (foundedShop == null)
-                    {
-                        Console.WriteLine("Магазин не найден, запись в базу данных...");
-                        var shop = new Shop() { ShopId = shopId };
-                        db.Shops.Add(shop);
-                        db.SaveChanges();
-                        return shop;
-                    }
+            if (shopId == null)
+                throw new NullReferenceException("Название магазина не может быть пустым!");
 
-                    Console.WriteLine("Магазин найден в базе данных.");
-                    return foundedShop;
-                }
-            }
-            catch (Exception e)
+            using (var db = new TestDbContext())
             {
-                Console.WriteLine(e.Message);
-                return null;
+                Console.WriteLine("Поиск магазина в базе данных...");
+                var foundedShop = db.Shops.Find(shopId);
+                if (foundedShop == null)
+                {
+                    Console.WriteLine("Магазин не найден, запись в базу данных...");
+                    var shop = new Shop() { ShopId = shopId };
+                    db.Shops.Add(shop);
+                    db.SaveChanges();
+                    return shop;
+                }
+
+                Console.WriteLine("Магазин найден в базе данных.");
+                return foundedShop;
             }
         }
 
@@ -47,6 +42,9 @@ namespace MyProject.BD
         /// <param name="offers"></param>
         public void AddOffers(IList<Offer> offers)
         {
+            if (offers == null || offers.Count == 0)
+                throw new NullReferenceException("Список товаров не может быть пустым.");
+
             try
             {
                 Console.WriteLine("Запись продуктов в базу данных...");
@@ -78,7 +76,7 @@ namespace MyProject.BD
                         // но в момент расчёта .Intersect(offers) вылетает исключение.
                         // Гугл говорит, что не удаётся преобразовать .Intersect(offers) в запрос sql.
                         // Как вариант я мог бы загрузить всю DbSet в память,
-                        // но как по мне это слишком затратно по ресурсам.
+                        // но по сути теряется сам смысл бд.
 
                         if (foundedOffer == null)
                         {
@@ -111,6 +109,9 @@ namespace MyProject.BD
         /// <param name="shop"></param>
         public void AddOffersToShop(IList<Offer> offers, Shop shop)
         {
+            if (offers == null || offers.Count == 0 || shop == null)
+                throw new NullReferenceException("Список товаров не может быть пустым.");
+
             try
             {
                 Console.WriteLine("Запись продуктов в магазин...");

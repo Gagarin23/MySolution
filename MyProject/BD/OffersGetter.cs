@@ -31,11 +31,17 @@ namespace MyProject.BD
         }
         public OffersGetter(string url, string searchElement)
         {
+            if (url == null || searchElement == null)
+                throw new NullReferenceException();
+
             Offers = GetModelObject(url, searchElement, LoadOffers);
         }
 
         private SurrogateOffers LoadOffers(string xml)
         {
+            if (xml == null)
+                throw new NullReferenceException(nameof(xml));
+
             var serializer = new XmlSerializer(typeof(SurrogateOffers));
 
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(xml)))

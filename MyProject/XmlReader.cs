@@ -14,6 +14,9 @@ namespace MyProject
         /// <returns></returns>
         protected T GetModelObject(string address, string elementName, Func<string, T> getModelObjectFunc)
         {
+            if (address == null || elementName == null || getModelObjectFunc == null)
+                throw new NullReferenceException();
+
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 Async = true,

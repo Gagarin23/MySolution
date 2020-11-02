@@ -15,8 +15,4 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0-rc.2.20475.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

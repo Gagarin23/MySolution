@@ -10,7 +10,7 @@ namespace MyProject.Controllers
 {
     class Commands
     {
-        private const string searchOffers = "offers";
+        private const string searchOffers = "offers"; //по заданию должен загружать товары.
         public bool DebbugFlagOfEndingAsyncMethod { get; set; }
 
         /// <summary>
