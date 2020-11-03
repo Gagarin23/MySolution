@@ -3,7 +3,7 @@ using MyProject.Model;
 
 namespace MyProject.BD
 {
-    class TestDbContext : DbContext
+    sealed class TestDbContext : DbContext
     {
         public TestDbContext()
         {

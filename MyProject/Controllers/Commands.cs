@@ -39,18 +39,16 @@ namespace MyProject.Controllers
 
             using (var db = new TestDbContext())
             {
-                Offer offer;
-                AvailabilityInShop availability;
                 var tempIds = db.Availability.Where(av => av.ShopId == shop.ShopId).Select(av => av.OfferId).ToArray();
                 // Хотелось бы реализовать выборку из db.Offers по коллекции айдишников,
                 // Но ничего лучше чем перебор не придумал.
 
                 Console.WriteLine("Первые десять товаров из магазина в виде csv:");
                 Console.WriteLine();
-                Console.WriteLine("{0};{1};{2}", nameof(offer.OfferId), nameof(offer.Name), nameof(availability.ShopId));
+                Console.WriteLine("{0};{1};{2}", nameof(Offer.OfferId), nameof(Offer.Name), nameof(AvailabilityInShop.ShopId));
                 for (int i = 0; i < 10; i++)
                 {
-                    offer = db.Offers.Find(tempIds[i]);
+                    var offer = db.Offers.Find(tempIds[i]);
                     Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
                 }
             }
