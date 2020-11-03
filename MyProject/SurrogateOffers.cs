@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using MyProject.Model;
 
-namespace MyProject.Model
+namespace MyProject
 {
     /// <summary>
     /// Сурогатный класс для чтения предоставленной xml.

@@ -21,7 +21,7 @@ namespace MyProject.BD
 
             using (var db = new TestDbContext())
             {
-                Console.WriteLine($"Поиск магазина \"{shopId}\" в базе...");
+                Console.WriteLine("Поиск магазина в базе...");
                 var foundedShop = db.Shops.Find(shopId);
                 if (foundedShop == null)
                 {
@@ -32,7 +32,7 @@ namespace MyProject.BD
                     return shop;
                 }
 
-                Console.WriteLine($"Магазин \"{shopId}\" найден в базе.");
+                Console.WriteLine("Магазин найден в базе.");
                 return foundedShop;
             }
         }
@@ -54,12 +54,12 @@ namespace MyProject.BD
                 {
                     db.Database.OpenConnection();
                     db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers ON;");
-                    int i = 0;
-                    for (i = 0; i < offers.Count; i++) 
-                        //Для больших коллекций стараюсь использовать for вместо foreach
-                        //т.к. обращение по индексу быстрее, чем вызов метода MoveNext() в foreach.
-                        //Вызов метода предполагает в стеке установку флага возврата из вызваемого метода,
-                        //а это дополнительные накладные расходы.
+                    int i;
+                    for (i = 0; i < offers.Count; i++)
+                    //Для больших коллекций стараюсь использовать for вместо foreach
+                    //т.к. обращение по индексу быстрее, чем вызов метода MoveNext() в foreach.
+                    //Вызов метода предполагает в стеке установку флага возврата из вызваемого метода,
+                    //а это дополнительные накладные расходы.
                     {
                         var foundedOffer = db.Offers.Find(offers[i].OfferId);
 
@@ -94,6 +94,8 @@ namespace MyProject.BD
                     Console.WriteLine("Сохранение базы...");
                     db.SaveChanges();
                     db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers OFF;");
+                    Console.WriteLine("База сохранена.");
+                    Console.WriteLine("Записей обработано: {0}", i);
                 }
             }
             catch (Exception e)
@@ -115,10 +117,10 @@ namespace MyProject.BD
 
             try
             {
-                Console.WriteLine($"Запись продуктов в магазин \"{shop.ShopId}\"...");
+                Console.WriteLine("Запись продуктов в магазин...");
                 using (var db = new TestDbContext())
                 {
-                    int i = 0;
+                    int i;
                     for (i = 0; i < offers.Count; i++)
                     {
                         var foundedOfferInShop = db.Availability.Where(av => av.ShopId == shop.ShopId)
@@ -138,6 +140,8 @@ namespace MyProject.BD
 
                     Console.WriteLine("Сохранение базы...");
                     db.SaveChanges();
+                    Console.WriteLine("База обновлена.");
+                    Console.WriteLine("Записей обработано: {0}", i);
                 }
             }
             catch (Exception e)
@@ -158,7 +162,7 @@ namespace MyProject.BD
             var list = new List<Offer>() { offer };
             AddOffers(list);
             AddOffersToShop(list, shop);
-            
+
         }
     }
 }

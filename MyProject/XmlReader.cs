@@ -7,10 +7,13 @@ namespace MyProject
         where T : class
     {
         public Exception Exception { get; set; }
+
         /// <summary>
         /// Получить объект по имени из xml-документа. Если имя не найдено, то вернёт NULL !!
         /// </summary>
         /// <param name="address"></param>
+        /// <param name="elementName"></param>
+        /// <param name="getModelObjectFunc"></param>
         /// <returns></returns>
         protected T GetModelObject(string address, string elementName, Func<string, T> getModelObjectFunc)
         {

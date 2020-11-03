@@ -9,9 +9,9 @@ namespace MyProject.BD
     /// <summary>
     /// Получить offers из xml документа.
     /// </summary>
-    class OffersGetter : XmlReader<SurrogateOffers> 
-        //Прослоечный класс с наследованием, по моему мнению, нужен для того,
-        //чтобы в дальнейшем избежать проблем, если у класса предка изменится сигнатура.
+    class OffersGetter : XmlReader<SurrogateOffers>
+    //Прослоечный класс с наследованием, по моему мнению, нужен для того,
+    //чтобы в дальнейшем избежать проблем, если у класса предка изменится сигнатура.
     {
         private SurrogateOffers _offers;
         public SurrogateOffers Offers

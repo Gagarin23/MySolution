@@ -6,19 +6,19 @@ namespace MyProject.Model
 {
     public class Offer
     {
-        private int offerId;
+        private int _offerId;
         [XmlAttribute("id")]
         [Key]
         public int OfferId
         {
-            get => offerId;
+            get => _offerId;
             set
             {
                 if (value >= 1)
                 {
                     try
                     {
-                        offerId = checked(value);
+                        _offerId = checked(value);
                     }
                     catch (Exception e)
                     {

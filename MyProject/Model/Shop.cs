@@ -1,19 +1,19 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyProject
+namespace MyProject.Model
 {
     public class Shop
     {
-        private string shopId;
+        private string _shopId;
         [Key]
         public string ShopId
         {
-            get => shopId;
+            get => _shopId;
             set
             {
                 if (value != null || value.Length < 50) //Добавить бы ещё валидацию на корректность символов, но это отдельная тема.
-                    shopId = value;
+                    _shopId = value;
 
                 else
                 {
@@ -24,7 +24,7 @@ namespace MyProject
 
         public override string ToString()
         {
-            return shopId;
+            return _shopId;
         }
     }
 }

@@ -11,32 +11,32 @@ namespace MyProject.Model
         [Key]
         public int Id { get; set; }
 
-        private Shop shop;
+        private Shop _shop;
         public Shop Shop
         {
-            get => shop;
+            get => _shop;
             set
             {
-                if (shop != null)
+                if (_shop != null)
                 {
                     Console.WriteLine("Товар с id {0} уже привязан к магазину {1}", OfferId, Shop);
                 }
                 else
                 {
-                    shop = value;
+                    _shop = value;
                     ShopId = value.ShopId;
                 }
             }
         }
 
-        private string shopId;
+        private string _shopId;
         public string ShopId
         {
-            get => shopId;
+            get => _shopId;
             private set
             {
                 if (value != null || value.Length < 50) //Добавить бы ещё валидацию на корректность символов, но это отдельная тема.
-                    shopId = value;
+                    _shopId = value;
 
                 else
                 {
@@ -45,27 +45,27 @@ namespace MyProject.Model
             }
         }
 
-        private Offer offer;
+        private Offer _offer;
         public Offer Offer
         {
-            get => offer;
+            get => _offer;
             set
             {
-                offer = value;
+                _offer = value;
                 OfferId = value.OfferId;
             }
         }
-        private int offerId;
+        private int _offerId;
         public int OfferId
         {
-            get => offerId;
+            get => _offerId;
             private set
             {
                 if (value >= 1)
                 {
                     try
                     {
-                        offerId = checked(value);
+                        _offerId = checked(value);
                     }
                     catch (Exception e)
                     {
