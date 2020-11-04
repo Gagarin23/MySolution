@@ -16,7 +16,7 @@ namespace MyProject.BD
         public Shop SetShop(string shopId)
         {
             Console.WriteLine();
-            if (shopId == null)
+            if (string.IsNullOrEmpty(shopId))
                 throw new NullReferenceException("Название магазина не может быть пустым!");
 
             using (var db = new TestDbContext())

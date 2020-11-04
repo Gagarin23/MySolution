@@ -31,8 +31,23 @@ namespace MyProject.Model
             }
         }
 
+        private string name;
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    name = value;
+                }
+                else
+                {
+                    Console.WriteLine($"Имя товара не может быть пустым. Значение было \"{value}\"");
+                }
+            }
+        }
 
         public override string ToString()
         {
