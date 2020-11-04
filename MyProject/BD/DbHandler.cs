@@ -123,8 +123,8 @@ namespace MyProject.BD
                     int i;
                     for (i = 0; i < offers.Count; i++)
                     {
-                        var foundedOfferInShop = db.Availability.Where(av => av.ShopId == shop.ShopId)
-                            .FirstOrDefault(av => av.OfferId == offers[i].OfferId);
+                        var foundedOfferInShop = db.Availability
+                            .SingleOrDefault(av => av.ShopId == shop.ShopId && av.OfferId == offers[i].OfferId);
 
                         if (foundedOfferInShop == null)
                         {
