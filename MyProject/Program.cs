@@ -25,7 +25,7 @@ namespace MyProject
             }
             else //Debug
             {
-                cmd.SaveOffersAsync("test", url);
+                cmd.SaveOffersAsync("", url);
                 while (!cmd.DebbugFlagOfEndingAsyncMethod) Thread.Sleep(1000);
                 cmd.DebbugFlagOfEndingAsyncMethod = false;
                 cmd.SaveOffersAsync("test2", url);
