@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MyProject.Model;
+using System.Collections.Generic;
 using System.Xml.Serialization;
-using MyProject.Model;
 
 namespace MyProject
 {

@@ -52,8 +52,6 @@ namespace MyProject.Controllers
                     Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
                 }
             }
-
-
         }
 
         /// <summary>

@@ -1,11 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyProject.BD;
 using MyProject.Model;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyProject.BD.Tests
 {
@@ -24,14 +19,16 @@ namespace MyProject.BD.Tests
             dbHandler.TestDbHandler(offer, shopId);
 
             AvailabilityInShop result;
-            using(var db = new TestDbContext())
+            using (var db = new TestDbContext())
             {
-                result = db.Availability.Where(av => av.ShopId == shopId)
-                    .FirstOrDefault(av => av.OfferId == offer.OfferId);
+                result = db.Availability.SingleOrDefault(av => av.ShopId == shopId && av.OfferId == offer.OfferId);
             }
 
             //Assert
-            Assert.IsNotNull(result);
+            Assert.AreEqual(offer.OfferId, result?.OfferId);
+
+            if (result != null)
+                dbHandler.RemoveTestItems(offer, shopId);
         }
     }
 }

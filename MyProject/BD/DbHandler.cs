@@ -162,7 +162,28 @@ namespace MyProject.BD
             var list = new List<Offer>() { offer };
             AddOffers(list);
             AddOffersToShop(list, shop);
+        }
 
+        public void RemoveTestItems(Offer offer, string shopId)
+        {
+            using (var db = new TestDbContext())
+            {
+                var foundedAvaibility = db.Availability
+                    .SingleOrDefault(av => av.ShopId == shopId && av.OfferId == offer.OfferId);
+
+                if (foundedAvaibility != null)
+                    db.Availability.Remove(foundedAvaibility);
+
+                var foundedOffer = db.Offers.Find(offer.OfferId);
+
+                if (foundedOffer != null)
+                    db.Offers.Remove(foundedOffer);
+
+                var foundedShop = db.Shops.Find(shopId);
+
+                if (foundedShop != null)
+                    db.Shops.Remove(foundedShop);
+            }
         }
     }
 }
