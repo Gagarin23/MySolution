@@ -3,16 +3,14 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using MyProject.BD;
 
 [assembly: InternalsVisibleTo("MyProjectTests")]
-[assembly: InternalsVisibleTo("PerfomenceProject")]
 namespace MyProject
 {
     class Program
     {
         private static string url = @"http://static.ozone.ru/multimedia/yml/facet/div_soft.xml";
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var cmd = new Commands();
@@ -27,13 +25,15 @@ namespace MyProject
             }
             else //Debug
             {
-                cmd.SaveOffersAsync("test", url);
+                cmd.SaveOffersAsync("", url);
                 while (!cmd.DebbugFlagOfEndingAsyncMethod) Thread.Sleep(1000);
                 cmd.DebbugFlagOfEndingAsyncMethod = false;
                 cmd.SaveOffersAsync("test2", url);
                 while (!cmd.DebbugFlagOfEndingAsyncMethod) Thread.Sleep(1000);
                 cmd.Print("test2");
             }
+
+            Console.ReadLine();
         }
     }
 }
