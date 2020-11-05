@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ExtendedProject.BD;
+using MyProject.BD;
 using System.Text;
 
-namespace ExtendedProject.Tests
+namespace MyProject.Tests
 {
     [TestClass()]
     public class XmlReaderTest

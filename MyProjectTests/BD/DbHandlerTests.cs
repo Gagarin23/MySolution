@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ExtendedProject.Model;
+using MyProject.Model;
 using System.Linq;
 
-namespace ExtendedProject.BD.Tests
+namespace MyProject.BD.Tests
 {
     [TestClass()]
     public class DbHandlerTests
