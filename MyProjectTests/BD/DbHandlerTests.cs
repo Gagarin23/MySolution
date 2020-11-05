@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MyProject.Model;
+using ExtendedProject.Model;
 using System.Linq;
+using ExtendedProject.BD;
 
 namespace MyProject.BD.Tests
 {

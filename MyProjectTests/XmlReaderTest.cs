@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyProject.BD;
 using System.Text;
+using ExtendedProject.BD;
 
 namespace MyProject.Tests
 {
