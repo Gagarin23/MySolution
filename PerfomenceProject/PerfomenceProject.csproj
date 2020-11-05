@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ExtendedSolution\ExtendedProject\ExtendedProject.csproj" />
-    <ProjectReference Include="..\MyProject\MyProject.csproj" />
   </ItemGroup>
 
 </Project>
