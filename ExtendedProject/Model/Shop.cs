@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace MyProject.Model
+namespace ExtendedProject.Model
 {
-    public class Shop
+    public sealed class Shop
     {
         private string _shopId;
         [Key]
-        public string ShopId
+        public string StringId
         {
             get => _shopId;
             set

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyProject.Model;
+﻿using ExtendedProject.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyProject.BD
+namespace ExtendedProject.BD
 {
     class DbHandler
     {
@@ -26,7 +26,7 @@ namespace MyProject.BD
                 if (foundedShop == null)
                 {
                     Console.WriteLine("Магазин не найден, запись в базу...");
-                    var shop = new Shop() { ShopId = shopId };
+                    var shop = new Shop() { StringId = shopId };
                     db.Shops.Add(shop);
                     db.SaveChanges();
                     return shop;
@@ -47,61 +47,22 @@ namespace MyProject.BD
             if (offers == null || offers.Count == 0)
                 throw new NullReferenceException("Список товаров не может быть пустым.");
 
-            try
+            Console.WriteLine("Запись продуктов в базу...");
+            using (var db = new TestDbContext())
             {
-                Console.WriteLine("Запись продуктов в базу...");
-                using (var db = new TestDbContext())
-                {
-                    db.Database.OpenConnection();
-                    db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers ON;");
+                var oldOffers = db.Offers;
+                var difference = offers
+                    .Where(newO => oldOffers.All(oldO => newO.OfferId != oldO.OfferId));
 
-                    int i;
-                    for (i = 0; i < offers.Count; i++)
-                    //Для больших коллекций стараюсь использовать for вместо foreach
-                    //т.к. обращение по индексу быстрее, чем вызов метода MoveNext() в foreach.
-                    //Вызов метода предполагает в стеке установку флага возврата из вызваемого метода,
-                    //а это дополнительные накладные расходы.
-                    {
-                        var foundedOffer = db.Offers.Find(offers[i].OfferId);
+                db.Offers.AddRange(difference);
 
-                        //var foundedOffers = db.Offers.Intersect(offers);
+                db.Database.OpenConnection();
+                db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers ON;");
 
-                        //if(foundedOffers.Length > 0)
-                        //{
-                        //    var elementOtAdd = foundedOffers.Except(offers);
-                        //    db.Offers.AddRange(elementOtAdd);
-                        //}
-                        //else
-                        //{
-                        //    db.Offers.AddRange(offers);
-                        //}
-                        // Закомменчиный код выше я хотел использовать чтобы не прибегать к циклам,
-                        // но в момент расчёта .Intersect(offers) вылетает исключение.
-                        // Гугл говорит, что не удаётся преобразовать .Intersect(offers) в запрос sql.
-                        // Как вариант я мог бы загрузить всю DbSet в память,
-                        // но по сути теряется сам смысл бд.
-
-                        if (foundedOffer == null)
-                        {
-                            db.Offers.Add(offers[i]);
-                        }
-                        else
-                        {
-                            db.Offers.Update(foundedOffer);
-                        }
-
-                    }
-
-                    Console.WriteLine("Сохранение базы...");
-                    db.SaveChanges();
-                    db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers OFF;");
-                    Console.WriteLine("База сохранена.");
-                    Console.WriteLine("Записей обработано: {0}", i);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Сохранение базы...");
+                db.SaveChanges();
+                db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.Offers OFF;");
+                Console.WriteLine("База сохранена.");
             }
         }
 
@@ -116,38 +77,27 @@ namespace MyProject.BD
             if (offers == null || offers.Count == 0 || shop == null)
                 throw new NullReferenceException("Список товаров не может быть пустым.");
 
-            try
+            Console.WriteLine("Запись продуктов в магазин...");
+            using (var db = new TestDbContext())
             {
-                Console.WriteLine("Запись продуктов в магазин...");
-                using (var db = new TestDbContext())
-                {
-                    int i;
-                    for (i = 0; i < offers.Count; i++)
-                    {
-                        var foundedOfferInShop = db.Availability
-                            .SingleOrDefault(av => av.ShopId == shop.ShopId && av.OfferId == offers[i].OfferId);
+                var oldAvailability = db.Availability;
 
-                        if (foundedOfferInShop == null)
-                        {
-                            db.Availability.Add(new AvailabilityInShop() { Offer = offers[i], Shop = shop });
-                        }
-                        else
-                        {
-                            db.Availability.Update(foundedOfferInShop);
-                        }
-                        db.Offers.Update(offers[i]);
-                    }
-                    db.Shops.Update(shop);
+                //Получаем товаровы, которых нет в магазине
+                var difference = offers.Where(o => oldAvailability
+                    .All(oldAv => o.OfferId != oldAv.OfferId || oldAv.ShopId != shop.StringId));
 
-                    Console.WriteLine("Сохранение базы...");
-                    db.SaveChanges();
-                    Console.WriteLine("База обновлена.");
-                    Console.WriteLine("Записей обработано: {0}", i);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                //На основе товаров, которых нет в магазин,
+                //получаем список объектов "наличия товара" в базе.
+                var availabilityToAdd = difference.Select(o => new AvailabilityInShop { Offer = o, Shop = shop });
+
+                db.Availability.AddRange(availabilityToAdd);
+
+                db.Shops.Update(shop);
+                db.Offers.UpdateRange(difference);
+
+                Console.WriteLine("Сохранение базы...");
+                db.SaveChanges();
+                Console.WriteLine("База обновлена.");
             }
         }
 

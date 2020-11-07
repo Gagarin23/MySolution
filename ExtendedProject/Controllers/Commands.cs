@@ -1,11 +1,11 @@
-﻿using MyProject.BD;
-using MyProject.Model;
+﻿using ExtendedProject.BD;
+using ExtendedProject.Model;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MyProject.Controllers
+namespace ExtendedProject.Controllers
 {
     class Commands
     {
@@ -23,7 +23,7 @@ namespace MyProject.Controllers
             var token = cancelSrc.Token;
             await Task.Run(() => SaveOffers(shopId, url, cancelSrc), token);
             //просто для примера показал синтаксис. Ну и в рабочем приложении
-            // я бы запускал запись/чтение в отдельном потоке дабы не вешать вьюшку.
+            //я бы запускал запись/чтение в отдельном потоке дабы не вешать вьюшку.
         }
 
         /// <summary>
@@ -32,23 +32,17 @@ namespace MyProject.Controllers
         /// <param name="shopId"></param>
         public void Print(string shopId)
         {
-            var shop = new Shop()
-            {
-                ShopId = shopId
-            };
-
             using (var db = new TestDbContext())
             {
-                var tempIds = db.Availability.Where(av => av.ShopId == shop.ShopId).Select(av => av.OfferId).ToArray();
-                // Хотелось бы реализовать выборку из db.Offers по коллекции айдишников,
-                // Но ничего лучше чем перебор не придумал.
+                var availabilityOffers = db.Availability.Where(av => av.ShopId == shopId).Take(10).ToArray();
 
                 Console.WriteLine("Первые десять товаров из магазина в виде csv:");
                 Console.WriteLine();
                 Console.WriteLine("{0};{1};{2}", nameof(Offer.OfferId), nameof(Offer.Name), nameof(AvailabilityInShop.ShopId));
-                for (int i = 0; i < 10; i++)
+
+                for (int i = 0; i < availabilityOffers.Length; i++)
                 {
-                    var offer = db.Offers.Find(tempIds[i]);
+                    var offer = db.Offers.Find(availabilityOffers[i].OfferId);
                     Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
                 }
             }
@@ -72,6 +66,7 @@ namespace MyProject.Controllers
                 var shop = dbHandler.SetShop(shopId);
                 dbHandler.AddOffers(offers);
                 dbHandler.AddOffersToShop(offers, shop);
+
                 DebbugFlagOfEndingAsyncMethod = true;
             }
             catch (Exception e)

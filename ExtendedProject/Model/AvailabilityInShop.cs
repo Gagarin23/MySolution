@@ -1,16 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyProject.Model
+namespace ExtendedProject.Model
 {
     /// <summary>
     /// Промежуточная таблица для реализации отношения многие ко многим.
     /// </summary>
-    public class AvailabilityInShop
+    public class AvailabilityInShop 
     {
         [Key]
-        public int Id { get; set; }
-
+        public int AvabilityId { get; set; }
         private Shop _shop;
         public Shop Shop
         {
@@ -24,7 +23,7 @@ namespace MyProject.Model
                 else
                 {
                     _shop = value;
-                    ShopId = value.ShopId;
+                    ShopId = value.StringId;
                 }
             }
         }
@@ -76,6 +75,11 @@ namespace MyProject.Model
                 else
                     Console.WriteLine("Id объекта не может быть меньше 1. Значение было {0}", value);
             }
+        }
+
+        public override string ToString()
+        {
+            return $"Shop: {ShopId}, OfferId: {OfferId}";
         }
     }
 }

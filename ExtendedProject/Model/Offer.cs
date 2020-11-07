@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Serialization;
 
-namespace MyProject.Model
+namespace ExtendedProject.Model
 {
-    public class Offer
+    public sealed class Offer
     {
         private int _offerId;
         [XmlAttribute("id")]

@@ -1,8 +1,8 @@
-﻿using MyProject.Model;
+﻿using ExtendedProject.Model;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace MyProject
+namespace ExtendedProject
 {
     /// <summary>
     /// Сурогатный класс для чтения предоставленной xml.

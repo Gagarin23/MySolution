@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace MyProject.BD
+namespace ExtendedProject.BD
 {
     /// <summary>
     /// Получить offers из xml документа.

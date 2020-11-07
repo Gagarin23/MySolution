@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace MyProject
+namespace ExtendedProject
 {
     class XmlReader<T>
         where T : class
@@ -17,8 +17,6 @@ namespace MyProject
         /// <returns></returns>
         protected T GetModelObject(string address, string elementName, Func<string, T> getModelObjectFunc)
         {
-
-
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 Async = true,

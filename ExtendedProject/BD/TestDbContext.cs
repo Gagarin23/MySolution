@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyProject.Model;
+﻿using ExtendedProject.Model;
+using Microsoft.EntityFrameworkCore;
 
-namespace MyProject.BD
+namespace ExtendedProject.BD
 {
     sealed class TestDbContext : DbContext
     {
@@ -17,7 +17,7 @@ namespace MyProject.BD
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\MSSQLLocalDB;Database=TestDataBase;Trusted_Connection=True;");
+                @"Server=(localdb)\MSSQLLocalDB;Database=TestDataBase2;Trusted_Connection=True;");
         }
     }
 }
