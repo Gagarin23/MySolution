@@ -6,7 +6,8 @@ using System.Xml.Serialization;
 
 namespace ExtendedProject.Model
 {
-    public sealed class Offer
+    [XmlType("offer")]
+    public class Offer : IEquatable<Offer>
     {
         private int _offerId;
         [XmlAttribute("id")]
@@ -51,9 +52,33 @@ namespace ExtendedProject.Model
             }
         }
 
+        [XmlIgnore]
+        public ICollection<Shop> Shops { get; set; } = new List<Shop>();
+
         public override string ToString()
         {
             return OfferId + " " + Name;
+        }
+
+        public bool Equals(Offer other)
+        {
+            if (other == null)
+                return false;
+
+            return OfferId == other.OfferId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Offer other)
+                return OfferId == other.OfferId;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return OfferId.GetHashCode();
         }
     }
 }

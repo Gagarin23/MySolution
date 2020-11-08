@@ -1,15 +1,17 @@
-﻿using ExtendedProject.BD;
-using ExtendedProject.Model;
+﻿using ExtendedProject.Model;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ExtendedProject.BL.MSSQL;
+using ExtendedProject.BL.XmlDeserializers;
 
 namespace ExtendedProject.Controllers
 {
     class Commands
     {
-        private const string SearchOffers = "offers"; //по заданию должен загружать товары.
+        private const string SearchElement = "shop"; //по условиям задания.
         public bool DebbugFlagOfEndingAsyncMethod { get; set; }
 
         /// <summary>
@@ -27,45 +29,20 @@ namespace ExtendedProject.Controllers
         }
 
         /// <summary>
-        /// Вывод в консоль товаров, находящихся в магазине.
-        /// </summary>
-        /// <param name="shopId"></param>
-        public void Print(string shopId)
-        {
-            using (var db = new TestDbContext())
-            {
-                var availabilityOffers = db.Availability.Where(av => av.ShopId == shopId).Take(10).ToArray();
-
-                Console.WriteLine("Первые десять товаров из магазина в виде csv:");
-                Console.WriteLine();
-                Console.WriteLine("{0};{1};{2}", nameof(Offer.OfferId), nameof(Offer.Name), nameof(AvailabilityInShop.ShopId));
-
-                for (int i = 0; i < availabilityOffers.Length; i++)
-                {
-                    var offer = db.Offers.Find(availabilityOffers[i].OfferId);
-                    Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
-                }
-            }
-        }
-
-        /// <summary>
         /// Сохранение товаров в БД.
         /// </summary>
         /// <param name="shopId"></param>
         /// <param name="url"></param>
         /// <param name="cancelSrc"></param>
         private void SaveOffers(string shopId, string url, CancellationTokenSource cancelSrc)
-        // Осознанно нарушен принцип единой ответственности, т.к. того требовало задание,
-        // а именно для реализации отношения многие ко многим, запись товаров и наличия товара в магазине
-        // требовало различных методов и по сути разных команд. Тут всё хапихано в "save".
         {
             try
             {
-                var offers = new OffersGetter(url, SearchOffers).Offers?.OfferList;
+                IXmlGetElement xmlHandler = new XmlHandler(url);
+                var shop = xmlHandler.GetElement<Shop>(SearchElement);
+                shop.ShopId = shopId;
                 var dbHandler = new DbHandler();
-                var shop = dbHandler.SetShop(shopId);
-                dbHandler.AddOffers(offers);
-                dbHandler.AddOffersToShop(offers, shop);
+                dbHandler.AddOffers(shop);
 
                 DebbugFlagOfEndingAsyncMethod = true;
             }
@@ -73,6 +50,33 @@ namespace ExtendedProject.Controllers
             {
                 Console.WriteLine(e.Message);
                 cancelSrc.Cancel();
+            }
+        }
+
+        /// <summary>
+        /// Вывод в консоль товаров, находящихся в магазине.
+        /// </summary>
+        /// <param name="shopId"></param>
+        public void Print(string shopId)
+        {
+            using (var db = new TestDbContext())
+            {
+                var availabilityOffers = db.Shops
+                    .Where(s => s.ShopId == shopId)
+                    .Select(s => s.Offers)
+                    .Select(o => o.Take(10))
+                    .SingleOrDefault() ?? new List<Offer>();
+
+                Console.WriteLine("Первые десять товаров из магазина в виде csv:");
+                Console.WriteLine();
+                Console.WriteLine("{0};{1};{2}", nameof(Offer.OfferId), nameof(Offer.Name), nameof(Shop.ShopId));
+
+                foreach (var offer in availabilityOffers)
+                {
+                    Console.WriteLine("{0};{1};{2}", offer.OfferId, offer.Name, shopId);
+                }
+
+                Console.WriteLine();
             }
         }
     }

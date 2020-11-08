@@ -1,14 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Xml.Serialization;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ExtendedProject.Model
 {
-    public sealed class Shop
+    [XmlType("shop")]
+    public class Shop
     {
         private string _shopId;
+        private List<Offer> _offers = new List<Offer>();
+
         [Key]
-        public string StringId
+        public string ShopId
         {
             get => _shopId;
             set
@@ -21,6 +28,21 @@ namespace ExtendedProject.Model
                     Console.WriteLine($"Id магазина не может быть пустым и не должно превышать 49 символов. Значение было \"{value}\"");
                 }
             }
+        }
+
+        [XmlIgnore]
+        public ICollection<Offer> Offers
+        {
+            get => _offers;
+            set => _offers = value as List<Offer>;
+        }
+
+        [XmlArray("offers")]
+        [NotMapped]
+        public List<Offer> XmlOffers
+        {
+            get => _offers;
+            set => _offers = value;
         }
 
         public override string ToString()
