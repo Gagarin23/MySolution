@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace ExtendedProject.Model
 {
     [XmlType("shop")]
-    public class Shop
+    public class Shop : IEquatable<Shop>
     {
         private string _shopId;
         private List<Offer> _offers = new List<Offer>();
@@ -48,6 +48,27 @@ namespace ExtendedProject.Model
         public override string ToString()
         {
             return _shopId;
+        }
+
+        public bool Equals(Shop other)
+        {
+            if (other == null)
+                return false;
+
+            return _shopId == other.ShopId;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Shop other)
+                return _shopId == other.ShopId;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return _shopId.GetHashCode();
         }
     }
 }

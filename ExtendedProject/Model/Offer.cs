@@ -65,20 +65,20 @@ namespace ExtendedProject.Model
             if (other == null)
                 return false;
 
-            return OfferId == other.OfferId;
+            return _offerId == other.OfferId;
         }
 
         public override bool Equals(object obj)
         {
             if (obj is Offer other)
-                return OfferId == other.OfferId;
+                return _offerId == other.OfferId;
 
             return false;
         }
 
         public override int GetHashCode()
         {
-            return OfferId.GetHashCode();
+            return _offerId.GetHashCode();
         }
     }
 }
