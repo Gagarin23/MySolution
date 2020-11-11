@@ -25,7 +25,7 @@ namespace ExtendedProject.BL.MSSQL
         {
             optionsBuilder.UseSqlServer(
                 @"Server=(localdb)\MSSQLLocalDB;Database=TestDataBase2;Trusted_Connection=True;");
-            //optionsBuilder.LogTo(Console.WriteLine);
+            optionsBuilder.LogTo(Console.WriteLine);
         }
     }
 }
